@@ -1,6 +1,4 @@
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 public class Bonus {
 
@@ -12,12 +10,12 @@ public class Bonus {
 
         HashSet<Integer> secretnumber = randomnumbergenerator();
         String stringnumber = setToStringConverter(secretnumber);
-        System.out.println(stringnumber);
-        feedback(/*vul hier het juiste argument in*/);
+        feedback(stringnumber);
+
 
     }
 
-    public static void/*moet dit returntype "void" zijn of wat anders?*/ randomnumbergenerator(/*Heeft deze methode nog parameter(s) nodig?*/){
+    public static HashSet<Integer> randomnumbergenerator(/*Heeft deze methode nog parameter(s) nodig?*/){
          /*
         Vul hier de body van de methode in.
 
@@ -27,9 +25,15 @@ public class Bonus {
         - Schrijf een while-loop om 4 random nummers aan de hashset toe te voegen
         - return de hashset
          */
+        Random random = new Random();
+        HashSet<Integer> hashSet = new HashSet<>();
+        while (hashSet.size() < 4){
+            hashSet.add(random.nextInt(10));
+        }
+        return hashSet;
     }
 
-    public static void/*moet dit returntype "void" zijn of wat anders?*/ setToStringConverter(/*Heeft deze methode nog parameter(s) nodig?*/){
+    public static String setToStringConverter(HashSet<Integer> hashSet){
         /*
         Vul hier de body van de methode in.
 
@@ -38,29 +42,44 @@ public class Bonus {
         - Schrijf vervolgens een for-loop om de items in de hashset een voor een aan de String variabele toe te voegen.
         - Return de (gevulde) String variabele
          */
+
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Integer number : hashSet) {
+            stringBuilder.append(number);
+        }
+        return stringBuilder.toString();
     }
 
 
 
-    public static void/*moet dit "void" zijn of wat anders?*/ feedback(String stringnumber) {
+    public static void feedback(String stringnumber) {
         Scanner scanner = new Scanner(System.in);
         StringBuilder feedback = new StringBuilder();
-        System.out.println("+ = juiste nummer op de juiste plek, O = juiste nummer verkeerde plek, X = verkeerde nummer");
-        System.out.println("Doe een gok, Let op vul 4 getallen in.");
-        String guess = scanner.nextLine();
-        if (Objects.equals(guess, stringnumber)) {
-            System.out.println("gefeliciteerd je hebt het goed");
-        } else {
-            for (int i = 0; i < 4; i++) {
-                if (guess.substring(i, i + 1).equals(stringnumber.substring(i, i + 1))) {
-                    feedback.append("+");
-                } else if (stringnumber.contains(guess.substring(i, i + 1))) {
-                    feedback.append("0");
-                } else {
-                    feedback.append("X");
+        boolean isCorrect = false;
+        while (!isCorrect) {
+            System.out.println("+ = juiste nummer op de juiste plek, O = juiste nummer verkeerde plek, X = verkeerde nummer");
+            System.out.println("Doe een gok, Let op vul 4 getallen in.");
+            String guess = scanner.nextLine();
+            if (Objects.equals(guess, stringnumber)) {
+                System.out.println("gefeliciteerd je hebt het goed");
+                isCorrect = true;
+            } else {
+                for (int i = 0; i < 4; i++) {
+                    if (guess.substring(i, i + 1).equals(stringnumber.substring(i, i + 1))) {
+                        feedback.append("+");
+                    } else if (stringnumber.contains(guess.substring(i, i + 1))) {
+                        feedback.append("0");
+                    } else {
+                        feedback.append("X");
+                    }
                 }
             }
+            System.out.println(feedback.toString());
+            feedback.delete(0, 4);
         }
-        System.out.println(feedback.toString());
     }
 }
+
+// WAAROM DE HASHSET EIGENLIJK GEEN GOEDE METHODE IS GEWEEST:
+// Bij een hashset hebben de cijfers geen vaste volgorde/positie.
+// De hashset kan alleen maar unieke nummers bevatten, terwijl het bij mastermind ook mogelijk is om 2 (of meer) keer hetzelfde nummer te hebben.
